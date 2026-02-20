@@ -2,7 +2,8 @@ package com.rocha.app;
 
 import com.rocha.enums.Status;
 import com.rocha.service.TaskService;
-
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.LocalDate;
 import java.util.Scanner;
 
@@ -11,6 +12,7 @@ public class main {
     public static void main(String[] args) {
         TaskService service = new TaskService();
         Scanner scanner = new Scanner(System.in);
+        DateTimeFormatter alarmFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
         int option = -1;
 
@@ -48,7 +50,22 @@ public class main {
                     System.out.print("Status (TODO, DOING, DONE): ");
                     Status status = Status.valueOf(scanner.nextLine().trim().toUpperCase());
 
-                    service.addTesk(name, description, expiration, priority, category, status);
+                    LocalDateTime alarmTime = null;
+
+                    System.out.print("Do you want an alarm? (y/n): ");
+                    String wantAlarm = scanner.nextLine().trim().toLowerCase();
+
+                    if (wantAlarm.equals("y")) {
+                        System.out.print("Alarm time (yyyy-MM-dd HH:mm): ");
+                        try {
+                            alarmTime = LocalDateTime.parse(scanner.nextLine(), alarmFormatter);
+                        } catch (Exception e) {
+                            System.out.println("Invalid date/time format. Alarm will be ignored.");
+                            alarmTime = null;
+                        }
+                    }
+
+                    service.addTesk(name, description, expiration, priority, category, status, alarmTime);
                     System.out.println("Task added.");
                     break;
 
@@ -102,5 +119,7 @@ public class main {
         }
 
         scanner.close();
+
     }
+
 }

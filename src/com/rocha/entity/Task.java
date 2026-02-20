@@ -2,7 +2,7 @@ package com.rocha.entity;
 
 import com.rocha.enums.Status;
 import com.rocha.enums.Status;
-
+import java.time.LocalDateTime;
 import java.time.LocalDate;
 
 public class Task implements Comparable<Task>
@@ -15,6 +15,7 @@ public class Task implements Comparable<Task>
     int priority;
     Status status;
     String category;
+    LocalDateTime alarmTime; // pode ser null (alarme opcional)
 
     public int getId() {
         return id;
@@ -24,7 +25,7 @@ public class Task implements Comparable<Task>
         this.id = id;
     }
 
-    public Task(String name, String category, Status status, int priority, LocalDate expiration, String description) {
+    public Task(String name, String category, Status status, int priority, LocalDate expiration, String description, LocalDateTime alarmTime) {
         this.id = taskCount++;
         this.name = name;
         this.category = category;
@@ -32,6 +33,7 @@ public class Task implements Comparable<Task>
         this.priority = priority;
         this.expiration = expiration;
         this.description = description;
+        this.alarmTime = alarmTime;
     }
 
     public String getName() {
@@ -86,6 +88,14 @@ public class Task implements Comparable<Task>
         this.category = category;
     }
 
+    public LocalDateTime getAlarmTime() {
+        return alarmTime;
+    }
+
+    public void setAlarmTime(LocalDateTime alarmTime) {
+        this.alarmTime = alarmTime;
+    }
+
     @Override
     public String toString() {
         return "Task{" +
@@ -93,6 +103,7 @@ public class Task implements Comparable<Task>
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", expiration=" + expiration +
+                ", alarmTime=" + alarmTime +
                 ", priority=" + priority +
                 ", status=" + status +
                 ", category='" + category + '\'' +
