@@ -25,6 +25,8 @@ public class Task implements Comparable<Task>
         this.id = id;
     }
 
+    public Task(){}
+
     public Task(String name, String category, Status status, int priority, LocalDate expiration, String description, LocalDateTime alarmTime) {
         this.id = taskCount++;
         this.name = name;

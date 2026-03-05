@@ -29,6 +29,33 @@ public class TaskService {
 
         scheduleAlarm(task); // agenda se tiver alarmTime
     }
+    public void updateTask(int id, String name, String description, LocalDate expiration, int priority, String category, Status status, LocalDateTime alarmTime) {
+        Task task = getById(id);
+        if (task != null) {
+            task.setName(name);
+            task.setDescription(description);
+            task.setExpiration(expiration);
+            task.setPriority(priority);
+            task.setCategory(category);
+            task.setStatus(status);
+            task.setAlarmTime(alarmTime);
+
+            if (status == Status.DONE) {
+                cancelAlarm(id);
+            } else {
+                scheduleAlarm(task);
+            }
+            Collections.sort(taskList);
+        }
+    }
+
+    public void addTesk(Task task){
+        taskList.add(task);
+    }
+
+    public Task getById(Integer id){
+        return taskList.stream().filter(task -> task.getId() == id).findFirst().orElse(null);
+    }
 
     public void showAllTasks(){
         taskList.forEach(System.out::println);
