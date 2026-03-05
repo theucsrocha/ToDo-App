@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aplicação TODO List</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
     <div class="container">
@@ -68,9 +68,13 @@
         <!-- Seção de listagem de tarefas -->
         <div class="list-section">
             <h2>Tarefas</h2>
+            
+            
+
             <table id="tasksTable">
                 <thead>
                     <tr>
+                        <th>Selecionar</th>
                         <th>Nome</th>
                         <th>Descrição</th>
                         <th>Expiração</th>
@@ -86,9 +90,18 @@
                     </tr>
                 </tbody>
             </table>
+            <div class="multi-select-actions">
+                <select id="multiStatusSelect">
+                    <option value="">Mudar status para...</option>
+                    <option value="TODO">TODO</option>
+                    <option value="DOING">DOING</option>
+                    <option value="DONE">DONE</option>
+                </select>
+                <button type="button" id="executarMultiStatus" class="btn btn-primary">Executar</button>
+            </div>
         </div>
     </div>
 
-    <script src="js/script.js"></script>
+    <script src="../js/script.js"></script>
 </body>
 </html>

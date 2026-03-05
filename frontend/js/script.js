@@ -1,9 +1,17 @@
 var tarefasCadastradas = [];
 var contadorTarefas = 0;
 var tarefaEmEdicao = null;
+
+if(window.localStorage.getItem('tarefasArmazenadas')){
+    tarefasCadastradas = JSON.parse(window.localStorage.getItem('tarefasArmazenadas'));
+    contadorTarefas = parseInt(window.localStorage.getItem('contadorTarefaArmazenado'));
+    atualizarListagem();
+}
+
+
 class Task{
-    id = contadorTarefas++;
     constructor(nome,descricao,expiracao,prioridade,categoria,status){
+        this.id = contadorTarefas++;
         this.nome = nome;
         this.descricao = descricao;
         this.expiracao = expiracao;
@@ -11,9 +19,6 @@ class Task{
         this.categoria = categoria;
         this.status = status;
     }
-
-    
-
 }
 
 document.getElementById("submitBtn").onclick = function(){
@@ -44,26 +49,35 @@ document.getElementById("submitBtn").onclick = function(){
     
     limparFormulario();
     atualizarListagem();
+    window.localStorage.setItem('tarefasArmazenadas',JSON.stringify(tarefasCadastradas));
+    window.localStorage.setItem('contadorTarefaArmazenado',contadorTarefas);
+    
 }
 
-function atualizarListagem(){
+function atualizarListagem() {
     let corpoTabela = document.getElementById("tasksBody");
     corpoTabela.innerHTML = "";
 
     if (tarefasCadastradas.length === 0) {
-        corpoTabela.innerHTML = '<tr class="empty-state"><td colspan="7">Nenhuma tarefa criada ainda</td></tr>';
+        corpoTabela.innerHTML = '<tr class="empty-state"><td colspan="8">Nenhuma tarefa criada ainda</td></tr>';
         return;
     }
 
     for (let i = 0; i < tarefasCadastradas.length; i++) {
         corpoTabela.innerHTML +=
             "<tr>" +
+                // 1. Coluna do Checkbox (Fundamental para a feature Multi-Status)
+                '<td><input type="checkbox" class="task-checkbox" data-id="' + tarefasCadastradas[i].id + '"></td>' +
+                
+                // 2. Colunas de dados da tarefa
                 "<td>" + tarefasCadastradas[i].nome + "</td>" +
                 "<td>" + tarefasCadastradas[i].descricao + "</td>" +
                 "<td>" + tarefasCadastradas[i].expiracao + "</td>" +
                 "<td>" + tarefasCadastradas[i].prioridade + "</td>" +
                 "<td>" + tarefasCadastradas[i].categoria + "</td>" +
                 "<td>" + tarefasCadastradas[i].status + "</td>" +
+                
+                // 3. Coluna de Ações (Atualizar e Remover)
                 '<td class="actions-cell">' +
                     '<button type="button" class="btn-update" title="Atualizar" data-id="' + tarefasCadastradas[i].id + '">↻</button>' +
                     '<button type="button" class="btn-remove" title="Remover" data-id="' + tarefasCadastradas[i].id + '">✕</button>' +
@@ -125,3 +139,41 @@ function limparFormulario(){
 document.getElementById("cancelBtn").onclick = function(){
     limparFormulario();
 }
+
+// Função para mudar o status de várias tarefas ao mesmo tempo
+document.getElementById("executarMultiStatus").onclick = function() {
+    // 1. Pega o status que o usuário escolheu no select
+    const novoStatus = document.getElementById("multiStatusSelect").value;
+    
+    if (!novoStatus) {
+        alert("Por favor, selecione um status para aplicar.");
+        return;
+    }
+
+    // 2. Filtra apenas os checkboxes que estão marcados (:checked)
+    const checkboxesMarcados = document.querySelectorAll('.task-checkbox:checked');
+    
+    if (checkboxesMarcados.length === 0) {
+        alert("Selecione pelo menos uma tarefa na lista.");
+        return;
+    }
+
+    // 3. Itera sobre os selecionados e atualiza o array de tarefas
+    let tarefasAtualizadas = 0;
+    checkboxesMarcados.forEach(checkbox => {
+        const idParaMudar = Number(checkbox.dataset.id);
+        const tarefa = tarefasCadastradas.find(t => t.id === idParaMudar);
+        if (tarefa) {
+            console.log("Tarefa encontrada:", tarefa.nome, "- Status anterior:", tarefa.status);
+            tarefa.status = novoStatus;
+            tarefasAtualizadas++;
+        }
+    });
+
+
+    // 4. Salva a nova lista no LocalStorage e atualiza a tela
+    window.localStorage.setItem('tarefasArmazenadas', JSON.stringify(tarefasCadastradas));
+    atualizarListagem();
+    
+    alert(tarefasAtualizadas + " tarefa(s) atualizada(s) para o status: " + novoStatus);
+};

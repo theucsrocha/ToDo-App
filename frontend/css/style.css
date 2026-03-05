@@ -193,6 +193,32 @@ textarea {
     margin-top: 30px;
 }
 
+/* Ações de Multi-Seleção */
+.multi-select-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    padding: 15px;
+    background-color: #ecf0f1;
+    border-radius: 4px;
+}
+
+.multi-select-actions select {
+    flex: 1;
+    max-width: 250px;
+    padding: 10px 12px;
+    border: 1px solid #bdc3c7;
+    border-radius: 4px;
+    font-size: 1em;
+}
+
+.multi-select-actions select:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
